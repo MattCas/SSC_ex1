@@ -90,7 +90,7 @@ public class Populator {
 				pstmt.setInt(2, 1+ r.nextInt(6)); //random int between 1 and 6 for titles
 				pstmt.setString(3, "Forename" + i) ;
 				pstmt.setString(4, "FamilyName" + i) ;
-				pstmt.setDate(5, new Date(0, 0, 1));
+				pstmt.setDate(5, new Date(60, 0, 1));
 				pstmt.executeUpdate() ;
 				c++;
 			}
@@ -105,8 +105,8 @@ public class Populator {
 				pstmt.clearParameters() ;
 				pstmt.setInt(1, i) ;
 				pstmt.setInt(2, 1+ r.nextInt(6)); //random int between 1 and 6 for titles
-				pstmt.setString(3, "Forename" + i) ;
-				pstmt.setString(4, "FamilyName" + i) ;
+				pstmt.setString(3, "LecturerForename" + i) ;
+				pstmt.setString(4, "LecturerFamilyName" + i) ;
 				pstmt.executeUpdate() ;
 				c++;
 			}
@@ -158,8 +158,8 @@ public class Populator {
 			for (int i = 1; i < 101; i++) {
 				pstmt.clearParameters() ;
 				pstmt.setInt(1, i) ;
-				pstmt.setString(2, null); 
-				pstmt.setString(3, "PostalAddress" + 1); 
+				pstmt.setString(2, "StudentEmail" + i); 
+				pstmt.setString(3, "StudentPostalAddress" + i); 
 				pstmt.executeUpdate() ;
 				c++;
 			}
@@ -173,9 +173,9 @@ public class Populator {
 			for (int i = 1; i < 101; i++) {
 				pstmt.clearParameters() ;
 				pstmt.setInt(1, i) ;
-				pstmt.setString(2, "TheirName" + i);
-				pstmt.setString(3, null); 
-				pstmt.setString(4, "PostalAddress" + 1); 
+				pstmt.setString(2, "NextOfKinName" + i);
+				pstmt.setString(3, "NextOfKineMail" + i); 
+				pstmt.setString(4, "NextOfKinPostalAddress" + i); 
 				pstmt.executeUpdate() ;
 				c++;
 			}
