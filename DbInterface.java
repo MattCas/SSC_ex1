@@ -10,10 +10,10 @@ public class DbInterface {
 	static int sid = 0;
 
 	public static void main(String[] args) {
-		setupConn();
-		//registerStudent();
-		//addTutor();
-		studentReport();
+		DbInterface dbi = new DbInterface();
+		DbInterface.setupConn();
+		dbi.initializeInterface(dbi);
+
 	}
 
 	public static void setupConn (){
@@ -39,8 +39,56 @@ public class DbInterface {
 		}
 
 	}
+
+	public void initializeInterface(DbInterface dbi){
+		System.out.println("===================================================");
+		System.out.println("| Welcome to the University of WhoKnows database  | ");
+		System.out.println("|                                                 | ");
+		System.out.println("| What do you want to do? Enter the corresponding | ");
+		System.out.println("| number for one of the options below:            | ");
+		System.out.println("|                                                 | ");
+		System.out.println("|           1. Register a new student             | ");
+		System.out.println("|           2. Add a tutee to tutor               | ");
+		System.out.println("|           3. Create a student report            | ");
+		System.out.println("|           4. Create a report for all tutees     | ");
+		System.out.println("===================================================");
+		//Initialize scanner
+		Scanner s = new Scanner(System.in);
+		//Read in number
+		while(!s.hasNextInt()){
+			s.nextLine();
+			System.out.println("Only numbers smaller than 4 please");			
+		}
+
+		int n = s.nextInt();
+		if (n == 1){
+			dbi.registerStudent();
+			//dbi.initializeInterface(dbi);
+		}
+		else if (n == 2){
+			dbi.addTutor();
+			//dbi.initializeInterface(dbi);
+		}
+		else if (n == 3){
+			dbi.studentReport();
+			//dbi.initializeInterface(dbi);
+		}
+
+		else if (n == 4){
+			dbi.tuteesReport();
+			//dbi.initializeInterface(dbi);
+		}
+
+		else{
+			System.out.println("Something went wrong");
+			//dbi.initializeInterface(dbi);
+		}
+		s.close();
+
+	}
+
 	@SuppressWarnings("deprecation")
-	public static void registerStudent (){
+	public void registerStudent (){
 		//Define required variables
 		int title = 0;		
 		String forename = null;
@@ -98,7 +146,7 @@ public class DbInterface {
 		return (Arrays.asList(titles).contains(s));
 	}
 	 */
-	public static void addTutor(){
+	public void addTutor(){
 		//Create scanner to read Student data in from cmd
 		Scanner s = new Scanner(System.in);
 		int lecID;
@@ -131,7 +179,7 @@ public class DbInterface {
 		}
 		s.close();
 	}
-	public static void studentReport(){
+	public void studentReport(){
 		Scanner s = new Scanner(System.in);
 		ResultSet rs;
 		System.out.println("Enter a Student ID number to generate a report");
@@ -204,5 +252,40 @@ public class DbInterface {
 		}
 		s.close();
 	}
+
+	public void tuteesReport(){
+		Scanner s = new Scanner(System.in);
+		ResultSet rs;
+		System.out.println("Enter a Lucturer ID number to generate a report");
+		while (!s.hasNextInt()){
+			System.out.println("Only insert a number");
+			s.nextLine();
+		}
+		int lecID = s.nextInt();
+		System.out.println("** Start of tutees report **");
+		try {
+			//Get Title, Name, Surname, dob and StudentID From Student
+			int yos = 0;
+			for (yos = 1; yos < 10; yos++){
+				pstmt = conn.prepareStatement(
+						"SELECT DISTINCT (SELECT titleString FROM Titles WHERE Titles.titleID = Student.titleID), foreName, familyName,  Student.studentID, dateOfBirth FROM StudentRegistration, Student WHERE StudentRegistration.yearOfStudy =" + yos + "AND Student.studentID = ANY (SELECT Tutor.studentID FROM Tutor WHERE lecturerID = " + lecID + ") ORDER BY foreName");
+				rs = pstmt.executeQuery();
+				ResultSetMetaData metad = rs.getMetaData();
+				while (rs.next()){
+					for (int i = 1; i <= metad.getColumnCount(); i++ ){
+						System.out.println(rs.getString(i));
+					}
+				}
+				System.out.println(System.lineSeparator());
+				System.out.println("----TUTEES IN YEAR " + yos + "----");
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		s.close();
+		System.out.println("** End of tutees report **");
+	}
+		
 }
 
